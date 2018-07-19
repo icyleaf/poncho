@@ -21,4 +21,4 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
   - [ ] store to file
 
 
-[Unreleased]: https://github.com/icyleaf/poncho/compare/cb1947c0b069295e6760f6315312eacc6e4f674b...HEAD
+[Unreleased]: https://github.com/icyleaf/poncho/compare/04d17738bcb7c15000ae56fea6c72157a96edfc4...HEAD
