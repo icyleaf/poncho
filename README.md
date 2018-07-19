@@ -8,6 +8,16 @@
 
 A .env parser/loader improved for performance. Poncho Icon by lastspark from <a href="https://thenounproject.com">Noun Project</a>.
 
+<!-- TOC -->
+
+- [Installation](#installation)
+- [Usage](#usage)
+- [Parse dotenv](#parse-dotenv)
+- [Contributing](#contributing)
+- [Contributors](#contributors)
+
+<!-- /TOC -->
+
 ## Installation
 
 Add this to your application's `shard.yml`:
@@ -26,7 +36,7 @@ require "poncho"
 
 ## Parse dotenv
 
-```
+```crystal
 poncho = Poncho.from_file ".env"
 # or
 poncho = Poncho.parse "PONCHO_ENV=development"
