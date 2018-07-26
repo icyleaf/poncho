@@ -22,7 +22,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## 0.1.0 (2017-07-24)
 
-First beta version released.
+:star2:First beta version.:star2:
 
 [Unreleased]: https://github.com/icyleaf/poncho/compare/v0.1.0...HEAD
 [0.1.0]: https://github.com/icyleaf/poncho/compare/04d17738bcb7c15000ae56fea6c72157a96edfc4...v0.1.0
