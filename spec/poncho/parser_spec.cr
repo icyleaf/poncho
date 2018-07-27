@@ -56,4 +56,12 @@ describe Poncho::Parser do
       spec_group env
     end
   end
+
+  describe "#to_h" do
+    it "should gets" do
+      env = Poncho::Parser.from_file(File.join(fixture_path, "sample.env"))
+      env.to_h.should be_a Hash(String, String)
+      spec_group env.to_h
+    end
+  end
 end

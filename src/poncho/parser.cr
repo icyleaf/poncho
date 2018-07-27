@@ -11,6 +11,10 @@ module Poncho
       parse
     end
 
+    def to_h
+      @env
+    end
+
     forward_missing_to @env
 
     private def parse
