@@ -6,15 +6,19 @@
 [![Tag](https://img.shields.io/github/tag/icyleaf/poncho.svg)](https://github.com/icyleaf/poncho/blob/master/CHANGELOG.md)
 [![Build Status](https://img.shields.io/circleci/project/github/icyleaf/poncho/master.svg?style=flat)](https://circleci.com/gh/icyleaf/poncho)
 
-A .env parser/loader improved for performance. Poncho Icon by lastspark from <a href="https://thenounproject.com">Noun Project</a>.
+A .env parser/loader improved for performance. Poncho Icon by lastspark from [Noun Project](https://thenounproject.com).
 
 <!-- TOC -->
 
 - [Installation](#installation)
 - [Usage](#usage)
-- [Parse dotenv](#parse-dotenv)
-- [Contributing](#contributing)
-- [Contributors](#contributors)
+  - [Parse](#parse)
+    - [Rules](#rules)
+    - [Examples](#examples)
+- [Donate](#donate)
+- [How to Contribute](#how-to-contribute)
+- [You may also like](#you-may-also-like)
+- [License](#license)
 
 <!-- /TOC -->
 
@@ -34,14 +38,37 @@ dependencies:
 require "poncho"
 ```
 
-## Parse dotenv
+### Parse
+
+Poncho parses the contents of your file containing environment variables is available to use.
+It accepts a String or IO and will return an `Hash` with the parsed keys and values.
+
+#### Rules
+
+Poncho parser currently supports the following rules:
+
+- Skipped the empty line and comment(`#`).
+- Ignore the comment which after (`#`).
+- `NAME=foo` becomes `{"NAME" => "foo"}`.
+- Empty values become empty strings.
+- Whirespace is removed from right ends of the value.
+- Single and Double quoted values are escaped.
+- New lines are expanded if in double quotes.
+- Inner quotes are maintained (such like json).
+- Overwrite optional (default is non-overwrite).
+- Only accpets string type value.
+
+#### Examples
 
 ```crystal
 poncho = Poncho.from_file ".env"
 # or
-poncho = Poncho.parse "PONCHO_ENV=development"
+poncho = Poncho.parse("ENV=development\nDB_NAME=poncho\nENV=production")
+poncho["ENV"] # => "development"
 
-poncho["PONCHO_ENV"] # => "development"
+# Overwrite the key
+poncho = Poncho.parse!("ENV=development\nDB_NAME=poncho\nENV=production", overwrite: true)
+poncho["ENV"] # => "production"
 ```
 
 ## Donate
