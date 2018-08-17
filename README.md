@@ -34,9 +34,17 @@ dependencies:
 
 ## Usage
 
-```crystal
-require "poncho"
+Add your application configuration to your `.env` file in the root of your project:
+
+```bash
+MYSQL_HOST=localhost
+MYSQL_PORT=3306
+MYSQL_DATABASE=poncho
+DMYSQL_USER=poncho
+MYSQL_PASSWORD=74e10b72-33b1-434b-a476-cfee0faa7d75
 ```
+
+Now you can parse or load it.
 
 ### Parse
 
@@ -61,14 +69,44 @@ Poncho parser currently supports the following rules:
 #### Examples
 
 ```crystal
+require "poncho"
+# Or only import parser
+require "poncho/parser"
+
 poncho = Poncho.from_file ".env"
 # or
 poncho = Poncho.parse("ENV=development\nDB_NAME=poncho\nENV=production")
 poncho["ENV"] # => "development"
 
-# Overwrite the key
+# Overwrite value with exists key
 poncho = Poncho.parse!("ENV=development\nDB_NAME=poncho\nENV=production", overwrite: true)
 poncho["ENV"] # => "production"
+```
+
+### Load
+
+Poncho loads the environment file is easy to use. It accepts both single file and multiple files.
+
+#### Orders
+
+Poncho loader currently supports the following order:
+
+- `.env` - The Original®
+- `.env.development`, `.env.test`, `.env.production` - Environment-specific settings.
+- `.env.local` - Local overrides. This file is loaded for all environments except `test`.
+- `.env.development.local`, `.env.test.local`, `.env.production.local` - Local overrides of environment-specific settings.
+
+#### Examples
+
+```crystal
+# Load singe file
+Poncho.load ".env"
+
+# Load multiple files
+Poncho.load ".env.local", ".env"
+
+# Load file and overwrite value with exists key
+Poncho.load! ".env.local", ".env"
 ```
 
 ## Donate
