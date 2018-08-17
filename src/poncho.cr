@@ -1,11 +1,24 @@
 require "./poncho/*"
 
 module Poncho
-  def self.from_file(file : String)
-    Parser.from_file(file)
+  extend self
+
+  # Parse dotenv from file
+  def from_file(file : String, overwrite = false)
+    Parser.from_file(file, overwrite)
   end
 
-  def self.parse(raw : String | IO)
-    Parser.new(raw)
+  # Parse raw string and overwrite the value with same key
+  #
+  # Same as `#parse`(raw, overwrite: true)
+  def parse!(raw : String | IO)
+    parse(raw, true)
+  end
+
+  # Parse raw string
+  def parse(raw : String | IO, overwrite = false)
+    parser = Parser.new(raw)
+    parser.parse(overwrite)
+    parser
   end
 end

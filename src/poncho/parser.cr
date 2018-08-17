@@ -1,23 +1,45 @@
 module Poncho
   # `Poncho::Parser` is a .env file parser
+  #
+  # ### Parse file
+  #
+  # ```
+  # parser = Poncho::Parser.from_file(".env")
+  # parser["ENV"] # => "development"
+  # ```
+  #
+  # ### Parse raw string
+  #
+  # ```
+  # parser = Poncho::Parser.new("ENV=development\nDB_NAME=poncho\nENV=production")
+  # parser.parse
+  # parser["ENV"] # => "development"
+  #
+  # # Overwrite the key
+  # parser.parse!
+  # parser["ENV"] # => "production"
+  #
   class Parser
-    def self.from_file(file : String)
-      new(File.open(file))
+    def self.from_file(file : String, overwrite = false)
+      parser = new(File.open(file))
+      parser.parse(overwrite)
+      parser
     end
 
     @env = {} of String => String
 
     def initialize(@raw : String | IO)
-      parse
     end
 
-    def to_h
-      @env
+    # Parse environment variables and overwrite existing ones.
+    #
+    # Same as `#parse`(overwrite: true)
+    def parse!
+      parse(true)
     end
 
-    forward_missing_to @env
-
-    private def parse
+    # Parse environment variables
+    def parse(overwrite = false)
       @raw.each_line do |line|
         next if line.blank? || !line.includes?('=')
         next unless expression = extract_expression(line)
@@ -31,9 +53,20 @@ module Poncho
           value = value[1..-2]
         end
 
-        @env[format_env_for(key)] = value.rstrip
+        env_key = format_env_for(key)
+        key_existes = @env.has_key?(env_key)
+        @env[env_key] = value.rstrip if !key_existes || (key_existes && overwrite)
       end
+
+      nil
     end
+
+    # Returns this collection as a plain Hash.
+    def to_h : Hash(String, String)
+      @env
+    end
+
+    forward_missing_to @env
 
     private def format_env_for(key : String)
       lower = false
