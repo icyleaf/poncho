@@ -64,7 +64,7 @@ Poncho parser currently supports the following rules:
 - Ignore the comment which after (`#`).
 - `NAME=foo` becomes `{"NAME" => "foo"}`.
 - Empty values become empty strings.
-- Whirespace is removed from right ends of the value.
+- Whitespace is removed from right ends of the value.
 - Single and Double quoted values are escaped.
 - New lines are expanded if in double quotes.
 - Inner quotes are maintained (such like json).
