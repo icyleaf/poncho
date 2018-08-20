@@ -97,7 +97,7 @@ poncho["ENV"] # => "production"
 
 ### Load
 
-Poncho loads the environment file is easy to use. It accepts both single file and multiple files.
+Poncho loads the environment file is easy to use. It accepts both single file (or path) and multiple files.
 
 #### Orders
 
@@ -122,6 +122,9 @@ To overwrite existing environment variables you can use `Poncho.load!(*files)` o
 # Load singe file
 # Searching order: .env.development, .env.local, .env.development.local
 Poncho.load ".env"
+
+# Load from path
+Poncho.load "config/"
 
 # Load production file
 # Searching order: .env, .env.production, .env.local, .env.production.local
