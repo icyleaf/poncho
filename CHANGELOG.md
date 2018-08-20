@@ -22,8 +22,21 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## Added
 
-- Add new parameter `overwrite : Bool` to `#parse` method, by default `false` means that it sets value once with same key.
-- Add `#parse!` method to parse dotenv and overwrite the value with same key, sames as `#parse(true)`.
+### Parser
+
+  - Add new parameter `overwrite : Bool` to `#parse` method, by default `false` means that it sets value once with same key.
+  - Add `#parse!` method to parse dotenv and overwrite the value with same key, sames as `#parse(true)`.
+
+### Loader
+
+Supportd now!
+
+  - Support single file with enviroment name and following searching file by orders.
+  - Support single path and following searching file by orders.
+  - Support multiple files (ignore searching orders and environment name).
+  - Support overwrite existing environment variables
+
+See [#3](https://github.com/icyleaf/poncho/pull/3).
 
 ## Changed
 
