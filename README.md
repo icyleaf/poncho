@@ -108,7 +108,7 @@ Poncho loads **single file** supports the following order with environment name 
 - `.env.local` - Local overrides. This file is loaded for all environments except `test`.
 - `.env.development.local` - Local overrides of environment-specific settings.
 
-> **NO** effect with multiple fiels.
+> **NO** effect with multiple files.
 
 #### Overrides
 

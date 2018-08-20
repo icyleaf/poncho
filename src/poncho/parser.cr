@@ -1,6 +1,31 @@
 module Poncho
   # `Poncho::Parser` is a .env file parser
   #
+  # Poncho parses the contents of your file containing environment variables is available to use.
+  # It accepts a String or IO and will return an `Hash` with the parsed keys and values.
+  #
+  # ### Rules
+  #
+  # Poncho parser currently supports the following rules:
+  #
+  # - Skipped the empty line and comment(`#`).
+  # - Ignore the comment which after (`#`).
+  # - `NAME=foo` becomes `{"NAME" => "foo"}`.
+  # - Empty values become empty strings.
+  # - Whirespace is removed from right ends of the value.
+  # - Single and Double quoted values are escaped.
+  # - New lines are expanded if in double quotes.
+  # - Inner quotes are maintained (such like json).
+  # - Overwrite optional (default is non-overwrite).
+  # - Only accpets string type value.
+  #
+  # ### Overrides
+  #
+  # By default, Poncho won't overwrite existing environment variables as dotenv assumes the deployment environment
+  # has more knowledge about configuration than the application does.
+  # To overwrite existing environment variables you can use `Poncho.parse!(string_or_io)` /
+  # `Poncho.from_file(file, overwrite: true)` and `Poncho.parse(string_or_io, overwrite: true)`.
+  #
   # ### Parse file
   #
   # ```
@@ -18,7 +43,7 @@ module Poncho
   # # Overwrite the key
   # parser.parse!
   # parser["ENV"] # => "production"
-  #
+  # ```
   class Parser
     def self.from_file(file : String, overwrite = false)
       parser = new(File.open(file))
@@ -132,6 +157,11 @@ module Poncho
     end
   end
 
+  # Poncho parser helper
+  #
+  # ```
+  # require "poncho/parser"
+  # ```
   module ParserHelper
     # Parse dotenv from file
     def from_file(file : String, overwrite = false)

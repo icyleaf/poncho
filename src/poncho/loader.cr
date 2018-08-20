@@ -2,6 +2,38 @@ require "./parser"
 
 module Poncho
   # `Poncho::Loader` is a .env file loader
+  #
+  # Poncho loads the environment file is easy to use. It accepts both single file (or path) and multiple files.
+  #
+  # ### Orders
+  #
+  # Poncho loads **single file** supports the following order with environment name (default is `development`):
+  #
+  # - `.env` - The Original®
+  # - `.env.development` - Environment-specific settings.
+  # - `.env.local` - Local overrides. This file is loaded for all environments except `test`.
+  # - `.env.development.local` - Local overrides of environment-specific settings.
+  #
+  # > **NO** effect with multiple files.
+  #
+  # ### Overrides
+  #
+  # By default, Poncho won't overwrite existing environment variables as dotenv assumes the deployment environment
+  # has more knowledge about configuration than the application does.
+  #
+  # ### Load single file
+  #
+  # ```
+  # loader = Poncho::Loader.new env: "development"
+  # loader.load ".env"
+  # ```
+  #
+  # ### Load multiple files
+  #
+  # ```
+  # loader = Poncho::Loader.new
+  # loader.load ".env", ".env.local"
+  # ```
   class Loader
 
     DEFAULT_ENV_NAME = "development"
@@ -11,7 +43,7 @@ module Poncho
 
     # Load environment variables and overwrite existing ones.
     #
-    # Same as `#load`(overwrite: true)
+    # Same as `#load`(*files, overwrite: true)
     def load!(*paths)
       load(*paths, overwrite: true)
     end
@@ -73,11 +105,42 @@ module Poncho
     end
   end
 
+  # Poncho load helper
+  #
+  # ```
+  # require "poncho/loader"
+  # ```
   module LoaderHelper
+    # Load environment variables and overwrite existing ones.
+    #
+    # Same as `#load`(*files, overwrite: true)
+    #
+    # ```
+    # # Searching order: .env.development, .env.local, .env.development.local
+    # Poncho.load! ".env"
+    #
+    # # Load from path
+    # Poncho.load! "config/"
+    #
+    # # Load multiple files, ignore enviroment name.
+    # Poncho.load! ".env", ".env.local", env: "test"
+    # ```
     def load!(*files, env : String? = nil)
       load(*files, env: env, overwrite: true)
     end
 
+    # Load environment variables
+    #
+    # ```
+    # # Searching order: .env.development, .env.local, .env.development.local
+    # Poncho.load ".env"
+    #
+    # # Load from path
+    # Poncho.load "config/"
+    #
+    # # Load multiple files, ignore enviroment name.
+    # Poncho.load ".env", ".env.local", env: "test"
+    # ```
     def load(*files, env : String? = nil, overwrite = false)
       loader = Loader.new(env: env)
       loader.load(*files, overwrite: overwrite)

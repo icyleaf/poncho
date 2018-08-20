@@ -20,6 +20,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - [ ] Writer
   - [ ] store to file
 
+## 0.2.0 (2018-08-20)
+
 ## Added
 
 ### Parser
@@ -46,16 +48,17 @@ See [#3](https://github.com/icyleaf/poncho/pull/3).
 
 - Fix snakecase each part split by "_" do not format full key. `ABC_name` => `A_B_C_NAME` => "ABC_NAME"
 
-## 0.1.1 (2017-07-27)
+## 0.1.1 (2018-07-27)
 
 ## Added
 
 - Added `#to_h` methods.
 
-## 0.1.0 (2017-07-24)
+## 0.1.0 (2018-07-24)
 
 :star2:First beta version.:star2:
 
-[Unreleased]: https://github.com/icyleaf/poncho/compare/v0.1.1...HEAD
+[Unreleased]: https://github.com/icyleaf/poncho/compare/v0.2.0...HEAD
+[0.2.0]: https://github.com/icyleaf/poncho/compare/v0.1.1...v0.2.0
 [0.1.1]: https://github.com/icyleaf/poncho/compare/v0.1.0...v0.1.1
 [0.1.0]: https://github.com/icyleaf/poncho/compare/04d17738bcb7c15000ae56fea6c72157a96edfc4...v0.1.0
