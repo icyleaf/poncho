@@ -120,7 +120,7 @@ To overwrite existing environment variables you can use `Poncho.load!(*files)` o
 
 ```crystal
 require "poncho"
-# Or only import parser
+# Or only import loader
 require "poncho/loader"
 
 # Load singe file
