@@ -3,72 +3,84 @@ require "./parser"
 module Poncho
   # `Poncho::Loader` is a .env file loader
   class Loader
-    property env
 
-    def initialize(@env : String = "development")
+    DEFAULT_ENV_NAME = "development"
+
+    def initialize(@env : String? = nil)
     end
 
     # Load environment variables and overwrite existing ones.
     #
     # Same as `#load`(overwrite: true)
-    def load!(*files)
-      load(*files, overwrite: true)
+    def load!(*paths)
+      load(*paths, overwrite: true)
     end
 
     # Load environment variables
-    def load(*files, overwrite = false)
-      if files.size > 1 && files.last.is_a?(Bool)
-        overwrite = files.last.as(Bool)
+    def load(*paths, overwrite = false)
+      if paths.size > 1 && paths.last.is_a?(Bool)
+        overwrite = paths.last.as(Bool)
       end
 
-      files.each do |file|
-        next unless file.is_a?(String)
-        if file = find_file(file)
-          Poncho::Parser.from_file(file, overwrite).each do |key, value|
-            key_exists = ENV.has_key?(key)
-            ENV[key] = value if !key_exists || (key_exists && overwrite)
-          end
+      paths = paths.select {|f| f.is_a?(String) && !f.as(String).empty? }
+      if paths.size > 1
+        # Loads passed file in multiple files mode, ignore env name.
+        paths.each do |path|
+          load_to_env(path, overwrite) if File.exists?(path)
+        end
+      else
+        # Loads orders files in single file mode.
+        load_files(paths.first).each do |file|
+          load_to_env(file, overwrite)
         end
       end
     end
 
-    # Find dotenv file
-    private def find_file(file : String) : String?
-      filepath = File.dirname(file)
-      filename = File.basename(file)
-
-      search_filenames(filename).each do |name|
-        tempfile = File.join(filepath, name)
-        return tempfile if File.exists?(tempfile)
+    private def load_to_env(file : String, overwrite : Bool)
+      Poncho::Parser.from_file(file, overwrite).each do |key, value|
+        key_exists = ENV.has_key?(key)
+        ENV[key] = value if !key_exists || (key_exists && overwrite)
       end
     end
 
-    private def search_filenames(name : String) : Array(String)
+    private def load_files(path : String) : Array(String)
       local_suffix = ".local"
+      default_dotenv_name = ".env"
+      env_name = @env || DEFAULT_ENV_NAME
 
-      Array(String).new.tap do |names|
-        names << name
-
-        is_local_env = name.ends_with?(local_suffix)
-        names << "#{name}#{local_suffix}" unless is_local_env
-
-        name = name.gsub(local_suffix, "") if is_local_env
-        names << "#{name}.#{env}" unless is_local_env
-        names << "#{name}.#{env}#{local_suffix}"
+      path = File.expand_path(path)
+      filepath = Dir.exists?(path) ? path : File.dirname(path)
+      filename = Dir.exists?(path) ? default_dotenv_name : File.basename(path)
+      is_local_env = filename.ends_with?(local_suffix)
+      Array(String).new.tap do |files|
+        append_existed_file(files, filepath, filename)
+        name = is_local_env ? "#{filename.gsub(local_suffix, "")}.#{env_name}" : "#{filename}.#{env_name}"
+        append_existed_file(files, filepath, name)
+        append_existed_file(files, filepath, "#{filename}#{local_suffix}") unless is_local_env
+        append_existed_file(files, filepath, "#{filename}.#{env_name}#{local_suffix}")
       end
+    end
+
+    private def append_existed_file(files, path, name)
+      if file = find_file?(path, name)
+        files << file
+      end
+    end
+
+    private def find_file?(path, name) : String?
+      file = File.join(path, name)
+      return file if File.exists?(file)
     end
   end
 
   module LoaderHelper
-    def load!(*files, env = "development")
-      loader = Loader.new(env)
-      loader.load!(*files, overwrite: true)
-      loader
+    def load!(*files, env : String? = nil)
+      load(*files, env: env, overwrite: true)
     end
 
-    def load(*files, env = "development", overwrite = false)
-      loader = Loader.new(env)
-      loader.load(*files, overwrite)
+    def load(*files, env : String? = nil, overwrite = false)
+      loader = Loader.new(env: env)
+      loader.load(*files, overwrite: overwrite)
       loader
     end
   end

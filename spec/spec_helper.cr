@@ -51,3 +51,10 @@ def it_equal_group(env)
   it_equal env, "INCLUDE_SPACE", "some spaced out string"
   it_equal env, "USERNAME", "user@example.com"
 end
+
+def clean_env(filename)
+  env = Poncho::Parser.from_file fixture_path(filename)
+  env.each do |key, _|
+    ENV.delete(key)
+  end
+end

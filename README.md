@@ -14,7 +14,12 @@ A .env parser/loader improved for performance. Poncho Icon by lastspark from [No
 - [Usage](#usage)
   - [Parse](#parse)
     - [Rules](#rules)
+    - [Overrides](#overrides)
     - [Examples](#examples)
+  - [Load](#load)
+    - [Orders](#orders)
+    - [Overrides](#overrides-1)
+    - [Examples](#examples-1)
 - [Donate](#donate)
 - [How to Contribute](#how-to-contribute)
 - [You may also like](#you-may-also-like)
@@ -66,6 +71,13 @@ Poncho parser currently supports the following rules:
 - Overwrite optional (default is non-overwrite).
 - Only accpets string type value.
 
+#### Overrides
+
+By default, Poncho won't overwrite existing environment variables as dotenv assumes the deployment environment
+has more knowledge about configuration than the application does.
+To overwrite existing environment variables you can use `Poncho.parse!(string_or_io)` /
+`Poncho.from_file(file, overwrite: true)` and `Poncho.parse(string_or_io, overwrite: true)`.
+
 #### Examples
 
 ```crystal
@@ -75,11 +87,11 @@ require "poncho/parser"
 
 poncho = Poncho.from_file ".env"
 # or
-poncho = Poncho.parse("ENV=development\nDB_NAME=poncho\nENV=production")
+poncho = Poncho.parse("ENV=development\nENV=production")
 poncho["ENV"] # => "development"
 
 # Overwrite value with exists key
-poncho = Poncho.parse!("ENV=development\nDB_NAME=poncho\nENV=production", overwrite: true)
+poncho = Poncho.parse!("ENV=development\nENV=production")
 poncho["ENV"] # => "production"
 ```
 
@@ -89,24 +101,35 @@ Poncho loads the environment file is easy to use. It accepts both single file an
 
 #### Orders
 
-Poncho loader currently supports the following order:
+Poncho loads **single file** supports the following order with environment name (default is `development`):
 
 - `.env` - The Original®
-- `.env.development`, `.env.test`, `.env.production` - Environment-specific settings.
+- `.env.development` - Environment-specific settings.
 - `.env.local` - Local overrides. This file is loaded for all environments except `test`.
-- `.env.development.local`, `.env.test.local`, `.env.production.local` - Local overrides of environment-specific settings.
+- `.env.development.local` - Local overrides of environment-specific settings.
+
+> **NO** effect with multiple fiels.
+
+#### Overrides
+
+By default, Poncho won't overwrite existing environment variables as dotenv assumes the deployment environment
+has more knowledge about configuration than the application does.
+To overwrite existing environment variables you can use `Poncho.load!(*files)` or `Poncho.load(*files, overwrite: true)`.
 
 #### Examples
 
 ```crystal
 # Load singe file
+# Searching order: .env.development, .env.local, .env.development.local
 Poncho.load ".env"
 
-# Load multiple files
-Poncho.load ".env.local", ".env"
+# Load production file
+# Searching order: .env, .env.production, .env.local, .env.production.local
+Poncho.load ".env", env: "production"
 
-# Load file and overwrite value with exists key
-Poncho.load! ".env.local", ".env"
+# Load multiple files, ignore enviroment name.
+Poncho.load ".env", ".env.local", env: "test"
+# Searching order: .env, .env.local
 ```
 
 ## Donate
