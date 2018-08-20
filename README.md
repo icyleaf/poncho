@@ -45,7 +45,7 @@ Add your application configuration to your `.env` file in the root of your proje
 MYSQL_HOST=localhost
 MYSQL_PORT=3306
 MYSQL_DATABASE=poncho
-DMYSQL_USER=poncho
+MYSQL_USER=poncho
 MYSQL_PASSWORD=74e10b72-33b1-434b-a476-cfee0faa7d75
 ```
 
