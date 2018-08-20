@@ -119,6 +119,10 @@ To overwrite existing environment variables you can use `Poncho.load!(*files)` o
 #### Examples
 
 ```crystal
+require "poncho"
+# Or only import parser
+require "poncho/loader"
+
 # Load singe file
 # Searching order: .env.development, .env.local, .env.development.local
 Poncho.load ".env"
@@ -131,8 +135,8 @@ Poncho.load "config/"
 Poncho.load ".env", env: "production"
 
 # Load multiple files, ignore enviroment name.
-Poncho.load ".env", ".env.local", env: "test"
 # Searching order: .env, .env.local
+Poncho.load ".env", ".env.local", env: "test"
 ```
 
 ## Donate
