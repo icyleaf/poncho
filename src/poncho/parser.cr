@@ -53,7 +53,7 @@ module Poncho
           value = value[1..-2]
         end
 
-        env_key = format_env_for(key)
+        env_key = env_key(key)
         key_existes = @env.has_key?(env_key)
         @env[env_key] = value.rstrip if !key_existes || (key_existes && overwrite)
       end
@@ -68,14 +68,14 @@ module Poncho
 
     forward_missing_to @env
 
-    private def format_env_for(key : String)
-      lower = false
-      key.each_codepoint do |codepoint|
-        lower = true if codepoint >= 97 && codepoint <= 122
+    private def env_key(key : String)
+      unless key.includes?("_")
+        return (lowcase?(key) ? snakecase(key) : key).upcase
       end
 
-      key = snakecase(key) if lower
-      key.upcase
+      key.split("_").each_with_object(Array(String).new) do |part, obj|
+        obj << (lowcase?(part) ? snakecase(part) : part)
+      end.join("_").upcase
     end
 
     private def extract_expression(raw)
@@ -122,5 +122,36 @@ module Poncho
         end
       end
     end
+
+    private def lowcase?(key : String) : Bool
+      key.each_codepoint do |codepoint|
+        return true if codepoint >= 97 && codepoint <= 122
+      end
+
+      false
+    end
   end
+
+  module ParserHelper
+    # Parse dotenv from file
+    def from_file(file : String, overwrite = false)
+      Parser.from_file(file, overwrite)
+    end
+
+    # Parse raw string and overwrite the value with same key
+    #
+    # Same as `#parse`(raw, overwrite: true)
+    def parse!(raw : String | IO)
+      parse(raw, true)
+    end
+
+    # Parse raw string
+    def parse(raw : String | IO, overwrite = false)
+      parser = Parser.new(raw)
+      parser.parse(overwrite)
+      parser
+    end
+  end
+
+  extend ParserHelper
 end

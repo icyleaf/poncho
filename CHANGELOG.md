@@ -15,19 +15,36 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
   - [ ] support parse to hash
   - [ ] support parse to json
   - [ ] support parse to yaml
-- [ ] Loader
-  - [ ] Load to `ENV`
+- [x] Loader
+  - [x] Load to `ENV`
 - [ ] Writer
   - [ ] store to file
 
 ## Added
 
-- Add new parameter `overwrite : Bool` to `#parse` method, by default `false` means that it sets value once with same key.
-- Add `#parse!` method to parse dotenv and overwrite the value with same key, sames as `#parse(true)`.
+### Parser
+
+  - Add new parameter `overwrite : Bool` to `#parse` method, by default `false` means that it sets value once with same key.
+  - Add `#parse!` method to parse dotenv and overwrite the value with same key, sames as `#parse(true)`.
+
+### Loader
+
+Supportd now!
+
+  - Support single file with enviroment name and following searching file by orders.
+  - Support single path and following searching file by orders.
+  - Support multiple files (ignore searching orders and environment name).
+  - Support overwrite existing environment variables
+
+See [#3](https://github.com/icyleaf/poncho/pull/3).
 
 ## Changed
 
 - Change behavior with `Poncho::Parser.new` it does **NOT** parse automatic, you need call `#parse` method.
+
+## Fixed
+
+- Fix snakecase each part split by "_" do not format full key. `ABC_name` => `A_B_C_NAME` => "ABC_NAME"
 
 ## 0.1.1 (2017-07-27)
 
