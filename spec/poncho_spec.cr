@@ -23,12 +23,12 @@ describe Poncho do
   describe "gets" do
     describe "non-overwrite the key" do
       env = Poncho.from_file(fixture_path("overwrite.env"))
-      it_equal env, "NAME", "foo"
+      it_equal env, "PONCHO_NAME", "foo"
     end
 
     describe "overwrite the key" do
       env = Poncho.from_file(fixture_path("overwrite.env"), true)
-      it_equal env, "NAME", "new"
+      it_equal env, "PONCHO_NAME", "overwrite"
     end
 
     describe "#to_h" do

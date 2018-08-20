@@ -15,8 +15,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
   - [ ] support parse to hash
   - [ ] support parse to json
   - [ ] support parse to yaml
-- [ ] Loader
-  - [ ] Load to `ENV`
+- [x] Loader
+  - [x] Load to `ENV`
 - [ ] Writer
   - [ ] store to file
 
@@ -28,6 +28,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ## Changed
 
 - Change behavior with `Poncho::Parser.new` it does **NOT** parse automatic, you need call `#parse` method.
+
+## Fixed
+
+- Fix snakecase each part split by "_" do not format full key. `ABC_name` => `A_B_C_NAME` => "ABC_NAME"
 
 ## 0.1.1 (2017-07-27)
 
