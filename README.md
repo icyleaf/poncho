@@ -66,7 +66,7 @@ Poncho parser currently supports the following rules:
 - `ENV=development` becomes `{"ENV" => "development"}`.
 - Snakecase and upcase the key: `dbName` becomes `DB_NAME`, `DB_NAME` becomes `DB_NAME`.
 - Empty values become empty strings.
-- Whitespace is removed from right ends of the value.
+- Whitespace is removed from both starts and ends of the value.
 - Single and double quoted values are escaped.
 - New lines are expanded if in double quotes.
 - Inner quotes are maintained (such like json).

@@ -80,7 +80,7 @@ module Poncho
 
         env_key = env_key(key)
         key_existes = @env.has_key?(env_key)
-        @env[env_key] = value.rstrip if !key_existes || (key_existes && overwrite)
+        @env[env_key] = value if !key_existes || (key_existes && overwrite)
       end
 
       nil
