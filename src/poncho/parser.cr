@@ -95,9 +95,11 @@ module Poncho
 
     private def env_key(key : String)
       unless key.includes?("_")
+        # example: dbName => DB_NAME
         return (lowcase?(key) ? snakecase(key) : key).upcase
       end
 
+      # example: DB_Name = DB_NAME
       key.split("_").each_with_object(Array(String).new) do |part, obj|
         obj << (lowcase?(part) ? snakecase(part) : part)
       end.join("_").upcase

@@ -20,6 +20,7 @@ A .env parser/loader improved for performance. Poncho Icon by lastspark from [No
     - [Orders](#orders)
     - [Overrides](#overrides-1)
     - [Examples](#examples-1)
+- [Best solution](#best-solution)
 - [Donate](#donate)
 - [How to Contribute](#how-to-contribute)
 - [You may also like](#you-may-also-like)
@@ -62,10 +63,11 @@ Poncho parser currently supports the following rules:
 
 - Skipped the empty line and comment(`#`).
 - Ignore the comment which after (`#`).
-- `NAME=foo` becomes `{"NAME" => "foo"}`.
+- `ENV=development` becomes `{"ENV" => "development"}`.
+- Snakecase and upcase the key: `dbName` becomes `DB_NAME`, `DB_NAME` becomes `DB_NAME`.
 - Empty values become empty strings.
 - Whitespace is removed from right ends of the value.
-- Single and Double quoted values are escaped.
+- Single and double quoted values are escaped.
 - New lines are expanded if in double quotes.
 - Inner quotes are maintained (such like json).
 - Overwrite optional (default is non-overwrite).
@@ -97,7 +99,9 @@ poncho["ENV"] # => "production"
 
 ### Load
 
-Poncho loads the environment file is easy to use. It accepts both single file (or path) and multiple files.
+Poncho loads the environment file is easy to use, based on parser above.
+
+It accepts both single file (or path) and multiple files.
 
 #### Orders
 
@@ -108,7 +112,7 @@ Poncho loads **single file** supports the following order with environment name 
 - `.env.local` - Local overrides. This file is loaded for all environments except `test`.
 - `.env.development.local` - Local overrides of environment-specific settings.
 
-> **NO** effect with multiple files.
+> **NO** effect with multiple files, it only loads the given files.
 
 #### Overrides
 
@@ -134,10 +138,16 @@ Poncho.load "config/"
 # Searching order: .env, .env.production, .env.local, .env.production.local
 Poncho.load ".env", env: "production"
 
-# Load multiple files, ignore enviroment name.
+# Load multiple files and overwrite value with exists key
+# note: ignore enviroment name.
 # Searching order: .env, .env.local
-Poncho.load ".env", ".env.local", env: "test"
+Poncho.load! ".env", ".env.local", env: "test"
 ```
+
+## Best solution
+
+[Totem](https://github.com/icyleaf/totem) is here to help with that. Poncho was built-in to Totem to better with configuration.
+Configuration file formats is always the problem, you want to focus on building awesome things.
 
 ## Donate
 
