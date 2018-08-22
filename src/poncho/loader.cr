@@ -14,7 +14,7 @@ module Poncho
   # - `.env.local` - Local overrides. This file is loaded for all environments except `test`.
   # - `.env.development.local` - Local overrides of environment-specific settings.
   #
-  # > **NO** effect with multiple files.
+  # > **NO** effect with multiple files, it only loads the given files.
   #
   # ### Overrides
   #

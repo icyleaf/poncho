@@ -20,37 +20,43 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - [ ] Writer
   - [ ] store to file
 
-## [0.2.0] (2018-08-20)
+## [0.3.0] (2018-08-22)
 
 ## Added
 
-### Parser
+- Add variables in value support:sparkles:! [#6](https://github.com/icyleaf/poncho/pull/6)
 
-  - Add new parameter `overwrite : Bool` to `#parse` method, by default `false` means that it sets value once with same key.
-  - Add `#parse!` method to parse dotenv and overwrite the value with same key, sames as `#parse(true)`.
+## [0.2.0] (2018-08-20)
 
-### Loader
+### Added
+
+#### Parser
+
+- Add new parameter `overwrite : Bool` to `#parse` method, by default `false` means that it sets value once with same key.
+- Add `#parse!` method to parse dotenv and overwrite the value with same key, sames as `#parse(true)`.
+
+#### Loader
 
 Supportd now!
 
-  - Support single file with enviroment name and following searching file by orders.
-  - Support single path and following searching file by orders.
-  - Support multiple files (ignore searching orders and environment name).
-  - Support overwrite existing environment variables
+- Support single file with enviroment name and following searching file by orders.
+- Support single path and following searching file by orders.
+- Support multiple files (ignore searching orders and environment name).
+- Support overwrite existing environment variables
 
 See [#3](https://github.com/icyleaf/poncho/pull/3).
 
-## Changed
+### Changed
 
 - Change behavior with `Poncho::Parser.new` it does **NOT** parse automatic, you need call `#parse` method.
 
-## Fixed
+### Fixed
 
 - Fix snakecase each part split by "_" do not format full key. `ABC_name` => `A_B_C_NAME` => "ABC_NAME"
 
 ## [0.1.1] (2018-07-27)
 
-## Added
+### Added
 
 - Added `#to_h` methods.
 

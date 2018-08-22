@@ -19,7 +19,7 @@ module Poncho
   # - Empty values become empty strings.
   # - Single and double quoted values are escaped.
   # - Overwrite optional (default is non-overwrite).
-  # - Support variables in values. `WELCOME="hello $NAME"` becomes `{"WELCOME" => "hello foo"}`
+  # - Support variables in value. `WELCOME="hello $NAME"` becomes `{"WELCOME" => "hello foo"}`
   #
   # ### Overrides
   #
