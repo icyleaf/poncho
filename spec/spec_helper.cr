@@ -2,7 +2,7 @@ require "spec"
 require "../src/poncho"
 
 def fixture_path
-  path = File.expand_path("../fixtures/", __FILE__)
+  File.expand_path("../fixtures/", __FILE__)
 end
 
 def fixture_path(filename : String)

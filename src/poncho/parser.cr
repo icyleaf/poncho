@@ -75,7 +75,7 @@ module Poncho
         set_env(key, value, overwrite)
       end
 
-      replace_variables
+      # replace_variables
     end
 
     # Returns this collection as a plain Hash.
@@ -127,6 +127,8 @@ module Poncho
 
     private def replace_variables
       @vars.each do |key, vars|
+        replaced = false
+
         value = @env[key]
         vars.each do |var|
           var_key = var[1..-1]
@@ -136,10 +138,11 @@ module Poncho
 
           if var_value = @env[env_key(var_key)]?
             value = value.sub(var, var_value)
+            replaced = true
           end
         end
 
-        @env[key] = value
+        @env[key] = value if replaced
       end
     end
 
