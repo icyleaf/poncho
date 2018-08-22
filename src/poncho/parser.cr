@@ -75,7 +75,7 @@ module Poncho
         set_env(key, value, overwrite)
       end
 
-      # replace_variables
+      replace_variables
     end
 
     # Returns this collection as a plain Hash.
