@@ -64,7 +64,8 @@ See [#3](https://github.com/icyleaf/poncho/pull/3).
 
 :star2:First beta version.:star2:
 
-[Unreleased]: https://github.com/icyleaf/poncho/compare/v0.2.0...HEAD
+[Unreleased]: https://github.com/icyleaf/poncho/compare/v0.3.0...HEAD
+[0.3.0]: https://github.com/icyleaf/poncho/compare/v0.2.0...v0.3.0
 [0.2.0]: https://github.com/icyleaf/poncho/compare/v0.1.1...v0.2.0
 [0.1.1]: https://github.com/icyleaf/poncho/compare/v0.1.0...v0.1.1
 [0.1.0]: https://github.com/icyleaf/poncho/compare/04d17738bcb7c15000ae56fea6c72157a96edfc4...v0.1.0
