@@ -64,14 +64,15 @@ Poncho parser currently supports the following rules:
 - Skipped the empty line and comment(`#`).
 - Ignore the comment which after (`#`).
 - `ENV=development` becomes `{"ENV" => "development"}`.
-- Snakecase and upcase the key: `dbName` becomes `DB_NAME`, `DB_NAME` becomes `DB_NAME`.
+- Snakecase and upcase the key: `dbName` becomes `DB_NAME`, `DB_NAME` becomes `DB_NAME`
+- Support variables in value. `$NAME` or `${NAME}`.
+- Whitespace is removed from both ends of the value. `NAME = foo ` becomes`{"NAME" => "foo"}
+- New lines are expanded if in double quotes. `MULTILINE="new\nline"` becomes `{"MULTILINE" => "new\nline"}
+- Inner quotes are maintained (such like `Hash`/`JSON`). `JSON={"foo":"bar"}` becomes `{"JSON" => "{\"foo\":\"bar\"}"}
 - Empty values become empty strings.
-- Whitespace is removed from both starts and ends of the value.
 - Single and double quoted values are escaped.
-- New lines are expanded if in double quotes.
-- Inner quotes are maintained (such like json).
 - Overwrite optional (default is non-overwrite).
-- Only accpets string type value.
+- Support variables in value. `WELCOME="hello $NAME"` becomes `{"WELCOME" => "hello foo"}`
 
 #### Overrides
 

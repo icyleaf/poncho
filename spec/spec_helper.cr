@@ -2,7 +2,7 @@ require "spec"
 require "../src/poncho"
 
 def fixture_path
-  path = File.expand_path("../fixtures/", __FILE__)
+  File.expand_path("../fixtures/", __FILE__)
 end
 
 def fixture_path(filename : String)
@@ -50,6 +50,12 @@ def it_equal_group(env)
   it_equal env, "RETAIN_INNER_QUOTES_AS_STRING", %Q{{"foo": "bar"}}
   it_equal env, "INCLUDE_SPACE", "some spaced out string"
   it_equal env, "USERNAME", "user@example.com"
+  it_equal env, "SINGLE_VARIABLE", "foo"
+  it_equal env, "MULTIPLE_VARIABLE1", "foo42"
+  it_equal env, "MULTIPLE_VARIABLE2", "foo$INT1"
+  it_equal env, "SINGLE_BLOCK_VARIABLE", "foo42"
+  it_equal env, "SINGLE_QUOTES_VARIABLE", "hello $STR!"
+  it_equal env, "DOUBLE_QUOTES_VARIABLE", "hello foo, my email is user@example.com"
 end
 
 def clean_env(filename)

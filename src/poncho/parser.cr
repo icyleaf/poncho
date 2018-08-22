@@ -10,14 +10,16 @@ module Poncho
   #
   # - Skipped the empty line and comment(`#`).
   # - Ignore the comment which after (`#`).
-  # - `NAME=foo` becomes `{"NAME" => "foo"}`.
+  # - `ENV=development` becomes `{"ENV" => "development"}`.
+  # - Snakecase and upcase the key: `dbName` becomes `DB_NAME`, `DB_NAME` becomes `DB_NAME`
+  # - Support variables in value. `$NAME` or `${NAME}`.
+  # - Whitespace is removed from both ends of the value. `NAME = foo ` becomes`{"NAME" => "foo"}
+  # - New lines are expanded if in double quotes. `MULTILINE="new\nline"` becomes `{"MULTILINE" => "new\nline"}
+  # - Inner quotes are maintained (such like `Hash`/`JSON`). `JSON={"foo":"bar"}` becomes `{"JSON" => "{\"foo\":\"bar\"}"}
   # - Empty values become empty strings.
-  # - Whirespace is removed from right ends of the value.
-  # - Single and Double quoted values are escaped.
-  # - New lines are expanded if in double quotes.
-  # - Inner quotes are maintained (such like json).
+  # - Single and double quoted values are escaped.
   # - Overwrite optional (default is non-overwrite).
-  # - Only accpets string type value.
+  # - Support variables in values. `WELCOME="hello $NAME"` becomes `{"WELCOME" => "hello foo"}`
   #
   # ### Overrides
   #
@@ -52,6 +54,7 @@ module Poncho
     end
 
     @env = {} of String => String
+    @vars = {} of String => Array(String)
 
     def initialize(@raw : String | IO)
     end
@@ -68,22 +71,11 @@ module Poncho
       @raw.each_line do |line|
         next if line.blank? || !line.includes?('=')
         next unless expression = extract_expression(line)
-
-        key, value = expression.split("=", 2).map { |v| v.strip }
-        if ['\'', '"'].includes?(value[0]) && ['\'', '"'].includes?(value[-1])
-          if value[0] == '"' && value[-1] == '"'
-            value = value.gsub("\\n", "\n").gsub("\\r", "\r")
-          end
-
-          value = value[1..-2]
-        end
-
-        env_key = env_key(key)
-        key_existes = @env.has_key?(env_key)
-        @env[env_key] = value if !key_existes || (key_existes && overwrite)
+        key, value = extract_env(expression)
+        set_env(key, value, overwrite)
       end
 
-      nil
+      replace_variables
     end
 
     # Returns this collection as a plain Hash.
@@ -92,6 +84,34 @@ module Poncho
     end
 
     forward_missing_to @env
+
+    private def extract_env(expression : String)
+      search_vars = true
+      key, value = expression.split("=", 2).map { |v| v.strip }
+      if ['\'', '"'].includes?(value[0]) && ['\'', '"'].includes?(value[-1])
+        if value[0] == '"' && value[-1] == '"'
+          value = value.gsub("\\n", "\n").gsub("\\r", "\r")
+        else
+          search_vars = false
+        end
+
+        value = value[1..-2]
+      end
+
+      if search_vars && (vars = find_vars(value))
+        @vars[env_key(key)] = vars
+      end
+
+      [key, value]
+    end
+
+    private def set_env(key : String, value : String, overwrite : Bool)
+      env_key = env_key(key)
+      key_existes = @env.has_key?(env_key)
+      if !key_existes || (key_existes && overwrite)
+        @env[env_key] = value
+      end
+    end
 
     private def env_key(key : String)
       unless key.includes?("_")
@@ -105,7 +125,58 @@ module Poncho
       end.join("_").upcase
     end
 
-    private def extract_expression(raw)
+    private def replace_variables
+      @vars.each do |key, vars|
+        replaced = false
+
+        value = @env[key]
+        vars.each do |var|
+          var_key = var[1..-1]
+          if var_key[0] == '{' && var_key[-1] == '}'
+            var_key = var_key[1..-2]
+          end
+
+          if var_value = @env[env_key(var_key)]?
+            value = value.sub(var, var_value)
+            replaced = true
+          end
+        end
+
+        @env[key] = value if replaced
+      end
+    end
+
+    private def find_vars(value : String)
+      return unless starts_at = value.index('$')
+      vars = value[(starts_at + 1)..-1].split('$')
+      Array(String).new.tap do |obj|
+        vars.each do |var|
+          brace_open = false
+          value = String.build do |io|
+            io << '$'
+            var.each_char do |char|
+              brace_open = true if char == '{'
+              io << char if var_name_valid?(char)
+              if brace_open && char == '}'
+                break
+              end
+            end
+          end
+
+          obj << value
+        end
+      end
+    end
+
+    def var_name_valid?(char)
+      ord = char.ord
+      (ord >= 48 && ord <= 57) ||
+      (ord >= 65 && ord <= 90) ||
+      (ord >= 97 && ord <= 122) ||
+      [95, 123, 125].includes?(ord)
+    end
+
+    private def extract_expression(raw) : String?
       if raw.includes?('#')
         segments = [] of String
         quotes_open = false
