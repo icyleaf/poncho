@@ -11,7 +11,7 @@ module Poncho
   # - Skipped the empty line and comment(`#`).
   # - Ignore the comment which after (`#`).
   # - `ENV=development` becomes `{"ENV" => "development"}`.
-  # - Snakecase and upcase the key: `dbName` becomes `DB_NAME`, `DB_NAME` becomes `DB_NAME`
+  # - Converts camelcase boundaries to underscores and upcase the key: `dbName` becomes `DB_NAME`, `DB_NAME` becomes `DB_NAME`
   # - Support variables in value. `$NAME` or `${NAME}`.
   # - Whitespace is removed from both ends of the value. `NAME = foo ` becomes`{"NAME" => "foo"}
   # - New lines are expanded if in double quotes. `MULTILINE="new\nline"` becomes `{"MULTILINE" => "new\nline"}
@@ -114,15 +114,7 @@ module Poncho
     end
 
     private def env_key(key : String)
-      unless key.includes?("_")
-        # example: dbName => DB_NAME
-        return (lowcase?(key) ? snakecase(key) : key).upcase
-      end
-
-      # example: DB_Name = DB_NAME
-      key.split("_").each_with_object(Array(String).new) do |part, obj|
-        obj << (lowcase?(part) ? snakecase(part) : part)
-      end.join("_").upcase
+      key.underscore.upcase
     end
 
     private def replace_variables
@@ -168,7 +160,7 @@ module Poncho
       end
     end
 
-    def var_name_valid?(char)
+    private def var_name_valid?(char)
       ord = char.ord
       (ord >= 48 && ord <= 57) ||
       (ord >= 65 && ord <= 90) ||
@@ -200,33 +192,6 @@ module Poncho
       else
         raw
       end
-    end
-
-    private def snakecase(key : String) : String
-      return key if key.empty?
-
-      first = true
-      String.build do |io|
-        key.each_char do |char|
-          if first
-            io << char.downcase
-          elsif char.ord >= 65 && char.ord <= 90
-            io << '_' << char.downcase
-          else
-            io << char
-          end
-
-          first = false
-        end
-      end
-    end
-
-    private def lowcase?(key : String) : Bool
-      key.each_codepoint do |codepoint|
-        return true if codepoint >= 97 && codepoint <= 122
-      end
-
-      false
     end
   end
 
