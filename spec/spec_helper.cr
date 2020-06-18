@@ -1,24 +1,6 @@
 require "spec"
 require "../src/poncho"
 
-def fixture_path
-  File.expand_path("../fixtures/", __FILE__)
-end
-
-def fixture_path(filename : String)
-  File.join(fixture_path, filename)
-end
-
-def load_fixture(filename : String)
-  File.read_lines(fixture_path(filename)).join("\n")
-end
-
-def it_equal(env, key, expected, file = __FILE__, line = __LINE__)
-  it "gets #{key}", file, line do
-    env[key].should eq expected
-  end
-end
-
 def it_equal_group(env, file = __FILE__, line = __LINE__)
   it_equal env, "BLANK", "", file, line
   it_equal env, "STR", "foo", file, line
@@ -47,7 +29,7 @@ def it_equal_group(env, file = __FILE__, line = __LINE__)
   it_equal env, "UNDEFINED_EXPAND", "$TOTALLY_UNDEFINED_ENV_KEY", file, line
   it_equal env, "EQUAL_SIGNS", "equals==", file, line
   it_equal env, "RETAIN_INNER_QUOTES", %Q{{"foo": "bar"}}, file, line
-  it_equal env, "RETAIN_INNER_QUOTES_AS_STRING", %Q{{"foo": "bar"}, file, line}
+  it_equal env, "RETAIN_INNER_QUOTES_AS_STRING", %Q{{"foo": "bar"}}, file, line
   it_equal env, "INCLUDE_SPACE", "some spaced out string", file, line
   it_equal env, "USERNAME", "user@example.com", file, line
   it_equal env, "SINGLE_VARIABLE", "foo", file, line
@@ -58,9 +40,27 @@ def it_equal_group(env, file = __FILE__, line = __LINE__)
   it_equal env, "DOUBLE_QUOTES_VARIABLE", "hello foo, my email is user@example.com", file, line
 end
 
+def it_equal(env, key, expected, file = __FILE__, line = __LINE__)
+  it "gets #{key}", file, line do
+    env[key].should eq expected
+  end
+end
+
 def clean_env(filename)
   env = Poncho::Parser.from_file fixture_path(filename)
   env.each do |key, _|
     ENV.delete(key)
   end
+end
+
+def load_fixture(filename : String)
+  File.read_lines(fixture_path(filename)).join("\n")
+end
+
+def fixture_path
+  File.expand_path("../fixtures/", __FILE__)
+end
+
+def fixture_path(filename : String)
+  File.join(fixture_path, filename)
 end
