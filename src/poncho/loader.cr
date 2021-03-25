@@ -35,7 +35,6 @@ module Poncho
   # loader.load ".env", ".env.local"
   # ```
   class Loader
-
     DEFAULT_ENV_NAME = "development"
 
     def initialize(@env : String? = nil)
@@ -54,7 +53,7 @@ module Poncho
         overwrite = paths.last.as(Bool)
       end
 
-      paths = paths.select {|f| f.is_a?(String) && !f.as(String).empty? }
+      paths = paths.select { |f| f.is_a?(String) && !f.as(String).empty? }
       if paths.size > 1
         # Loads passed file in multiple files mode, ignore env name.
         paths.each do |path|

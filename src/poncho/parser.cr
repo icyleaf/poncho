@@ -163,9 +163,9 @@ module Poncho
     private def var_name_valid?(char)
       ord = char.ord
       (ord >= 48 && ord <= 57) ||
-      (ord >= 65 && ord <= 90) ||
-      (ord >= 97 && ord <= 122) ||
-      [95, 123, 125].includes?(ord)
+        (ord >= 65 && ord <= 90) ||
+        (ord >= 97 && ord <= 122) ||
+        [95, 123, 125].includes?(ord)
     end
 
     private def extract_expression(raw) : String?
