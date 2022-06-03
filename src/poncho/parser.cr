@@ -88,14 +88,16 @@ module Poncho
     private def extract_env(expression : String)
       search_vars = true
       key, value = expression.split("=", 2).map { |v| v.strip }
-      if ['\'', '"'].includes?(value[0]) && ['\'', '"'].includes?(value[-1])
-        if value[0] == '"' && value[-1] == '"'
-          value = value.gsub("\\n", "\n").gsub("\\r", "\r")
-        else
-          search_vars = false
-        end
+      if !value.empty?
+        if ['\'', '"'].includes?(value[0]) && ['\'', '"'].includes?(value[-1])
+          if value[0] == '"' && value[-1] == '"'
+            value = value.gsub("\\n", "\n").gsub("\\r", "\r")
+          else
+            search_vars = false
+          end
 
-        value = value[1..-2]
+          value = value[1..-2]
+        end
       end
 
       if search_vars && (vars = find_vars(value))
