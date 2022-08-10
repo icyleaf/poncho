@@ -4,7 +4,7 @@
 
 [![Language](https://img.shields.io/badge/language-crystal-776791.svg)](https://github.com/crystal-lang/crystal)
 [![Tag](https://img.shields.io/github/tag/icyleaf/poncho.svg)](https://github.com/icyleaf/poncho/blob/master/CHANGELOG.md)
-[![Build Status](https://img.shields.io/circleci/project/github/icyleaf/poncho/master.svg?style=flat)](https://circleci.com/gh/icyleaf/poncho)
+[![Linux CI](https://github.com/icyleaf/poncho/actions/workflows/linux-ci.yml/badge.svg?branch=master)](https://github.com/icyleaf/poncho/actions/workflows/linux-ci.yml)
 
 A .env parser/loader improved for performance. Poncho Icon by lastspark from [Noun Project](https://thenounproject.com).
 
