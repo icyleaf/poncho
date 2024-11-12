@@ -38,6 +38,8 @@ def it_equal_group(data = nil, file = __FILE__, line = __LINE__)
   it_equal data, "SINGLE_BLOCK_VARIABLE", "foo42", file, line
   it_equal data, "SINGLE_QUOTES_VARIABLE", "hello $STR!", file, line
   it_equal data, "DOUBLE_QUOTES_VARIABLE", "hello foo, my email is user@example.com", file, line
+  it_equal data, "UNQUOTED_VARIABLE", "Hello there!", file, line
+  it_equal data, "EMPTY_VARIABLE", "", file, line
 end
 
 def it_equal(data, key, expected, file = __FILE__, line = __LINE__)
